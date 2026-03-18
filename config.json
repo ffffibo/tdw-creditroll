@@ -1,0 +1,22 @@
+{
+  "excel_path": "/Users/fabianweisspflog/Library/CloudStorage/GoogleDrive-fibo.exe@gmail.com/Meine Ablage/Scripting/Antigravity/TdW/typomosaic/tdw-creditroll-2026-03-15.xlsx",
+  "image_path": "/Users/fabianweisspflog/Library/CloudStorage/GoogleDrive-fibo.exe@gmail.com/Meine Ablage/Scripting/Antigravity/TdW/typomosaic/tdw-gallpeters.png",
+  "output_dir": "/Users/fabianweisspflog/Library/CloudStorage/GoogleDrive-fibo.exe@gmail.com/Meine Ablage/Scripting/Antigravity/TdW/typomosaic",
+  "font_dir": "/Users/fabianweisspflog/Library/CloudStorage/GoogleDrive-fibo.exe@gmail.com/Meine Ablage/Scripting/Antigravity/TdW/typomosaic/neue-haas-grotesk-display-pro",
+  "text_before": "",
+  "text_after": "",
+  "separator": " / ",
+  "page_width_mm": 295,
+  "page_height_mm": 345,
+  "margin_x_mm": 10,
+  "margin_y_mm": 10,
+  "line_spacing_factor": 1.1,
+  "justify": true,
+  "threshold_black": 85,
+  "threshold_white": 200,
+  "min_font_size": 3,
+  "max_font_size": 20,
+  "variant": "latin",
+  "excluded_names": [],
+  "tracking_em": 0.06
+}

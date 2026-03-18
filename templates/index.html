@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="de">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Credit PDF Generator
+  </title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <style>
+   :root {
+      --bg-primary: #0d1117;
+      --bg-secondary: #161b22;
+      --bg-tertiary: #1c2333;
+      --bg-card: #1a1f2e;
+      --bg-input: #0d1117;
+      --border: #30363d;
+      --border-focus: #58a6ff;
+      --text-primary: #e6edf3;
+      --text-secondary: #8b949e;
+      --text-muted: #6e7681;
+      --accent: #58a6ff;
+      --accent-hover: #79c0ff;
+      --accent-glow: rgba(88, 166, 255, 0.15);
+      --success: #56d364;
+      --success-glow: rgba(86, 211, 100, 0.15);
+      --warning: #e3b341;
+      --danger: #f85149;
+      --purple: #bc8cff;
+      --gradient-1: linear-gradient(135deg, #58a6ff 0%, #bc8cff 100%);
+      --gradient-2: linear-gradient(135deg, #1a1f2e 0%, #161b22 100%);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+      --radius: 10px;
+      --radius-sm: 6px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* ── Header ─────────────────────────────── */
+    .header {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(8px);
+    }
+
+    .header-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--gradient-1);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .header h1 {
+      font-size: 18px;
+      font-weight: 600;
+      background: var(--gradient-1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-status {
+      margin-left: auto;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ── Layout ─────────────────────────────── */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 24px;
+    }
+
+    /* ── Cards ──────────────────────────────── */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-secondary);
+    }
+
+    .card-header .icon {
+      font-size: 16px;
+    }
+
+    .card-body {
+      padding: 18px;
+    }
+
+    /* ── Sidebar ────────────────────────────── */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ── Form Elements ─────────────────────── */
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    .field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .field input[type="text"],
+    .field input[type="number"],
+    .field textarea,
+    .field select {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 13px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .field textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .path-input {
+      display: flex;
+      gap: 6px;
+    }
+
+    .path-input input {
+      flex: 1;
+      font-size: 11px;
+    }
+
+    .path-input .btn-icon {
+      flex-shrink: 0;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+    }
+
+    .path-input .btn-icon:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ── Toggle / Checkbox ─────────────────── */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 0;
+    }
+
+    .toggle-row label {
+      margin-bottom: 0;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-primary);
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .toggle {
+      position: relative;
+      width: 38px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .toggle input {
+      display: none;
+    }
+
+    .toggle .slider {
+      position: absolute;
+      inset: 0;
+      background: var(--border);
+      border-radius: 10px;
+      transition: background 0.2s;
+    }
+
+    .toggle .slider::after {
+      content: '';
+      position: absolute;
+      left: 2px;
+      top: 2px;
+      width: 16px;
+      height: 16px;
+      background: var(--text-primary);
+      border-radius: 50%;
+      transition: transform 0.2s;
+    }
+
+    .toggle input:checked+.slider {
+      background: var(--accent);
+    }
+
+    .toggle input:checked+.slider::after {
+      transform: translateX(18px);
+    }
+
+    /* ── Image Preview ─────────────────────── */
+    .image-preview {
+      width: 100%;
+      aspect-ratio: 295/325;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    .image-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      opacity: 0.7;
+    }
+
+    .image-preview .placeholder {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ── Names Table ───────────────────────── */
+    .names-panel {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 100px);
+      position: sticky;
+      top: 76px;
+    }
+
+    .names-toolbar {
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 150px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 7px 12px 7px 32px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-size: 13px;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .search-box::before {
+      content: '🔍';
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+    }
+
+    .names-stats {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .btn-sm {
+      padding: 5px 12px;
+      font-size: 11px;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-sm:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn-sm.active {
+      background: var(--accent-glow);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .names-scroll {
+      flex: 1;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    .names-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .names-scroll::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+
+    .name-row {
+      display: grid;
+      grid-template-columns: 36px 1fr 80px;
+      align-items: center;
+      padding: 6px 18px;
+      border-bottom: 1px solid rgba(48, 54, 61, 0.4);
+      font-size: 13px;
+      transition: background 0.15s;
+    }
+
+    .name-row:hover {
+      background: rgba(88, 166, 255, 0.04);
+    }
+
+    .name-row.excluded {
+      opacity: 0.4;
+    }
+
+    .name-row.non-latin .name-text {
+      color: var(--purple);
+    }
+
+    .name-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .name-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .name-typ {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-align: right;
+      text-transform: uppercase;
+    }
+
+    /* ── Generate Button ───────────────────── */
+    .generate-bar {
+      padding: 14px 18px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-generate {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: var(--gradient-1);
+      color: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-generate:hover {
+      opacity: 0.9;
+    }
+
+    .btn-generate:active {
+      transform: scale(0.98);
+    }
+
+    .btn-generate:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ── Results ────────────────────────────── */
+    .results-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .results-overlay.visible {
+      display: flex;
+    }
+
+    .results-dialog {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .results-dialog h2 {
+      font-size: 18px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .result-item {
+      padding: 12px 14px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+
+    .result-item .filename {
+      font-weight: 600;
+      color: var(--success);
+      margin-bottom: 4px;
+    }
+
+    .result-item .details {
+      color: var(--text-secondary);
+      font-size: 11px;
+    }
+
+    .result-item .btn-download {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 6px 14px;
+      background: var(--gradient-1);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .result-item .btn-download:hover {
+      opacity: 0.85;
+    }
+
+    .results-dialog .btn-close {
+      margin-top: 16px;
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .results-dialog .btn-close:hover {
+      border-color: var(--accent);
+    }
+
+    /* Error */
+    .error-msg {
+      padding: 10px 14px;
+      background: rgba(248, 81, 73, 0.1);
+      border: 1px solid rgba(248, 81, 73, 0.3);
+      border-radius: var(--radius-sm);
+      color: var(--danger);
+      font-size: 12px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .error-msg.visible {
+      display: block;
+    }
+
+    /* Loading spinner */
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    <!-- Header --><div class="header"><div class="header-icon">📄</div><h1>Credit PDF Generator</h1><div class="header-status" id="headerStatus">Lade…</div></div><!-- Results Overlay --><div class="results-overlay" id="resultsOverlay"><div class="results-dialog"><h2>✅ PDF generiert</h2><div id="resultsList"></div><button class="btn-close" onclick="closeResults()">Schließen</button></div></div><!-- Main Layout --><div class="container"><!-- Sidebar --><div class="sidebar"><!-- Files Card --><div class="card"><div class="card-header"><span class="icon">📁</span>Dateien</div><div class="card-body"><div class="field"><label>Excel-Datei (.xlsx)</label><input type="file" id="excelFile" accept=".xlsx" onchange="loadExcel()" style="padding: 4px;"></div><div class="field"><label>Brightness-Map Bild (.png)</label><input type="file" id="imageFile" accept="image/*" onchange="loadImage()" style="padding: 4px;"><div class="image-preview" id="imagePreview" style="margin-top: 10px;"><span class="placeholder">Standard-Bild wird zur Generierung referenziert</span></div></div></div></div><!-- Text Card --><div class="card"><div class="card-header"><span class="icon">✏️</span>Eigener Text</div><div class="card-body"><div class="field"><label>Text vor den Namen</label><textarea id="textBefore" rows="2" placeholder="z.B. 'Mitwirkende: '"></textarea></div><div class="field"><label>Text nach den Namen</label><textarea id="textAfter" rows="2" placeholder="z.B. '… und viele mehr.'"></textarea></div></div></div><!-- Settings Card --><div class="card"><div class="card-header"><span class="icon">⚙️</span>Einstellungen</div><div class="card-body"><div class="field"><label>Variante</label><select id="variant"><option value="both">Beide (Latin + All)</option><option value="latin">Nur Latin</option><option value="all">Alle Schriften</option></select></div><div class="field"><label>Separator</label><input type="text" id="separator" value=" / "></div><div class="field-row"><div class="field"><label>Seitenbreite (mm)</label><input type="number" id="pageWidth" value="295" min="50" max="1000"></div><div class="field"><label>Seitenhöhe (mm)</label><input type="number" id="pageHeight" value="325" min="50" max="1000"></div></div><div class="field-row"><div class="field"><label>Rand X (mm)</label><input type="number" id="marginX" value="10" min="0" max="100"></div><div class="field"><label>Rand Y (mm)</label><input type="number" id="marginY" value="10" min="0" max="100"></div></div><div class="field-row"><div class="field"><label>Zeilenabstand</label><input type="number" id="lineSpacing" value="1.05" min="0.8" max="3" step="0.05"></div><div class="field"><label>Zeichenabstand (Laufweite)</label><input type="number" id="trackingEm" value="0" min="-0.5" max="1.5" step="0.01"></div></div><div class="field-row"><div class="field"><label>Min. Schriftgröße (pt)</label><input type="number" id="minFontSize" value="3" min="1" max="50" step="0.5"></div><div class="field"><label>Max. Schriftgröße (pt)</label><input type="number" id="maxFontSize" value="20" min="1" max="100" step="0.5"></div></div><div class="field-row"><div class="field"><label>Schwelle Schwarz</label><input type="number" id="thresholdBlack" value="85" min="0" max="255"></div><div class="field"><label>Schwelle Weiß</label><input type="number" id="thresholdWhite" value="200" min="0" max="255"></div></div><div class="toggle-row"><label>Blocksatz</label><label class="toggle"><input type="checkbox" id="justify" checked><span class="slider"></span></label></div></div></div><div class="error-msg" id="errorMsg"></div></div><!-- Names Panel --><div class="card names-panel"><div class="card-header"><span class="icon">👤</span>Namen</div><div class="names-toolbar"><div class="search-box"><input type="text" id="searchInput" placeholder="Suchen…" oninput="filterNames()"></div><div class="field" style="margin-bottom:0; min-width: 120px;"><select id="filterState" onchange="filterNames()" style="padding: 6px 10px;"><option value="all">Alle anzeigen</option><option value="included" selected>Ausgewählt</option><option value="excluded">Nicht ausgewählt</option></select></div><span class="names-stats" id="namesStats">–</span><div style="display: flex; gap: 6px; width: 100%;"><button class="btn-sm" onclick="selectAll()">Alle wählen</button><button class="btn-sm" onclick="selectNone()">Keine wählen</button><button class="btn-sm" onclick="selectInvert()">Alle umkehren</button><button class="btn-sm" onclick="loadExcel()" style="margin-left: auto;">🔄 Excel laden</button></div></div><div class="names-scroll" id="namesScroll"></div><div class="generate-bar"><button class="btn-generate" id="btnGenerate" onclick="generate()" disabled>PDF Generieren </button></div></div></div><script> // ── State ──────────────────────────────────────
+
+    let config= {}
+
+    ;
+    let allNames=[];
+    let browserCallback=null;
+    let browserFilter='';
+    let browserCurrentPath='';
+
+    // ── Init ───────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', async ()=> {
+        await loadConfig();
+        applyConfigToUI();
+        await loadImage();
+        await loadExcel();
+        updateStatus('Bereit');
+      });
+
+    // ── Config ─────────────────────────────────────
+    async function loadConfig() {
+      const stored=localStorage.getItem('tdw_config');
+
+      config=stored ? JSON.parse(stored) : {}
+
+      ;
+    }
+
+    function applyConfigToUI() {
+      document.getElementById('textBefore').value=config.text_before || '';
+      document.getElementById('textAfter').value=config.text_after || '';
+      document.getElementById('separator').value=config.separator || ' / ';
+      document.getElementById('pageWidth').value=config.page_width_mm || 295;
+      document.getElementById('pageHeight').value=config.page_height_mm || 325;
+      document.getElementById('marginX').value=config.margin_x_mm || 10;
+      document.getElementById('marginY').value=config.margin_y_mm || 10;
+      document.getElementById('lineSpacing').value=config.line_spacing_factor || 1.05;
+      document.getElementById('trackingEm').value=config.tracking_em || 0;
+      document.getElementById('minFontSize').value=config.min_font_size || 3;
+      document.getElementById('maxFontSize').value=config.max_font_size || 20;
+      document.getElementById('thresholdBlack').value=config.threshold_black || 85;
+      document.getElementById('thresholdWhite').value=config.threshold_white || 200;
+      document.getElementById('variant').value=config.variant || 'both';
+
+      if (typeof config.justify !=='undefined') {
+        document.getElementById('justify').checked=config.justify;
+      }
+    }
+
+    function collectConfig() {
+      return {
+        text_before: document.getElementById('textBefore').value,
+          text_after: document.getElementById('textAfter').value,
+          separator: document.getElementById('separator').value,
+          page_width_mm: parseFloat(document.getElementById('pageWidth').value),
+          page_height_mm: parseFloat(document.getElementById('pageHeight').value),
+          margin_x_mm: parseFloat(document.getElementById('marginX').value),
+          margin_y_mm: parseFloat(document.getElementById('marginY').value),
+          line_spacing_factor: parseFloat(document.getElementById('lineSpacing').value),
+          tracking_em: parseFloat(document.getElementById('trackingEm').value),
+          min_font_size: parseFloat(document.getElementById('minFontSize').value),
+          max_font_size: parseFloat(document.getElementById('maxFontSize').value),
+          threshold_black: parseInt(document.getElementById('thresholdBlack').value),
+          threshold_white: parseInt(document.getElementById('thresholdWhite').value),
+          justify: document.getElementById('justify').checked,
+          variant: document.getElementById('variant').value,
+      }
+
+      ;
+    }
+
+    async function saveConfig() {
+      const cfg=collectConfig();
+      // Retain excluded names in config
+      cfg.excluded_names=config.excluded_names || [];
+      localStorage.setItem('tdw_config', JSON.stringify(cfg));
+      config=cfg;
+    }
+
+    // ── Excel Loading ──────────────────────────────
+    async function loadExcel() {
+      const fileInput=document.getElementById('excelFile');
+      if ( !fileInput.files.length) return;
+
+      updateStatus('Lade Excel…');
+      showError('');
+
+      const formData=new FormData();
+      formData.append('file', fileInput.files[0]);
+
+      try {
+        const r=await fetch('/api/load-excel', {
+          method: 'POST',
+          body: formData,
+        });
+      const data=await r.json();
+
+      if (data.error) {
+        showError(data.error);
+        updateStatus('Fehler');
+        return;
+      }
+
+      allNames=data.names;
+
+      // Exclude names that didn't have verwenden=True in Excel newly
+      const excelExcluded=new Set(config.excluded_names || []);
+      let changed=false;
+
+      allNames.forEach(n=> {
+          if ( !n.verwenden && !excelExcluded.has(n.id)) {
+            excelExcluded.add(n.id);
+            changed=true;
+          }
+        });
+
+      if (changed) {
+        config.excluded_names=[...excelExcluded];
+        saveConfig();
+      }
+
+      renderNames();
+
+      updateStatus(`$ {
+          data.names.length
+        }
+
+        Namen geladen`);
+    }
+
+    catch (e) {
+      showError('Verbindungsfehler: ' + e.message);
+      updateStatus('Fehler');
+    }
+    }
+
+    function renderNames() {
+      const container=document.getElementById('namesScroll');
+      const search=document.getElementById('searchInput').value.toLowerCase();
+      const filterState=document.getElementById('filterState').value;
+      const excluded=new Set(config.excluded_names || []);
+
+      let visibleNames=allNames;
+
+      // Filter by Search
+      if (search) {
+        visibleNames=visibleNames.filter(n=> n.name.toLowerCase().includes(search));
+      }
+
+      // Filter by selection state
+      if (filterState==='included') {
+        visibleNames=visibleNames.filter(n=> !excluded.has(n.id));
+      }
+
+      else if (filterState==='excluded') {
+        visibleNames=visibleNames.filter(n=> excluded.has(n.id));
+      }
+
+      const selectedCount=allNames.filter(n=> !excluded.has(n.id)).length;
+      const totalCount=allNames.length;
+
+      document.getElementById('namesStats').textContent=`$ {
+        selectedCount
+      }
+
+      / $ {
+        totalCount
+      }
+
+      im PDF`;
+
+      // Enable/disable generate button
+      document.getElementById('btnGenerate').disabled=selectedCount===0;
+
+      let html='';
+
+      for (const n of visibleNames) {
+        const isExcluded=excluded.has(n.id);
+        const classes=['name-row'];
+        if (isExcluded) classes.push('excluded');
+        if (n.non_latin) classes.push('non-latin');
+
+        html+=` <div class="${classes.join(' ')}"><input type="checkbox"$ {
+          isExcluded ? '': 'checked'
+        }
+
+        onchange="toggleId('${n.id}', this.checked)"><span class="name-text" title="${escapeHtml(n.name)}">$ {
+          escapeHtml(n.name)
+        }
+
+        </span><span class="name-typ">$ {
+          escapeHtml(n.typ)
+        }
+
+        </span></div>`;
+      }
+
+      container.innerHTML=html;
+    }
+
+    function toggleId(id, checked) {
+      const excluded=new Set(config.excluded_names || []);
+
+      if (checked) {
+        excluded.delete(id);
+      }
+
+      else {
+        excluded.add(id);
+      }
+
+      config.excluded_names=[...excluded];
+      saveConfig();
+      renderNames();
+    }
+
+    function selectAll() {
+      // Only select visible names to not mess with hidden ones
+      const search=document.getElementById('searchInput').value.toLowerCase();
+      let visibleNames=allNames;
+      if (search) visibleNames=visibleNames.filter(n=> n.name.toLowerCase().includes(search));
+
+      const excluded=new Set(config.excluded_names || []);
+      for (const n of visibleNames) excluded.delete(n.id);
+      config.excluded_names=[...excluded];
+      saveConfig();
+      renderNames();
+    }
+
+    function selectNone() {
+      // Only deselect visible names
+      const search=document.getElementById('searchInput').value.toLowerCase();
+      let visibleNames=allNames;
+      if (search) visibleNames=visibleNames.filter(n=> n.name.toLowerCase().includes(search));
+
+      const excluded=new Set(config.excluded_names || []);
+      for (const n of visibleNames) excluded.add(n.id);
+      config.excluded_names=[...excluded];
+      saveConfig();
+      renderNames();
+    }
+
+    function selectInvert() {
+      // Only invert visible names
+      const search=document.getElementById('searchInput').value.toLowerCase();
+      let visibleNames=allNames;
+      if (search) visibleNames=visibleNames.filter(n=> n.name.toLowerCase().includes(search));
+
+      const excluded=new Set(config.excluded_names || []);
+
+      for (const n of visibleNames) {
+        if (excluded.has(n.id)) {
+          excluded.delete(n.id);
+        }
+
+        else {
+          excluded.add(n.id);
+        }
+      }
+
+      config.excluded_names=[...excluded];
+      saveConfig();
+      renderNames();
+    }
+
+    function filterNames() {
+      renderNames();
+    }
+
+    // ── Image Preview ──────────────────────────────
+    async function loadImage() {
+      const fileInput=document.getElementById('imageFile');
+      const preview=document.getElementById('imagePreview');
+
+      if ( !fileInput.files.length) {
+        preview.innerHTML='<span class="placeholder">Standard-Bild wird zur Generierung referenziert</span>';
+        return;
+      }
+
+      const url=URL.createObjectURL(fileInput.files[0]);
+      preview.innerHTML=`<img src="${url}" alt="Brightness Map" style="max-width:100%; border-radius:4px;">`;
+    }
+
+    // ── Generate ───────────────────────────────────
+    async function generate() {
+      const btn=document.getElementById('btnGenerate');
+      btn.disabled=true;
+      btn.innerHTML='<span class="spinner"></span> Generiere…';
+      showError('');
+      updateStatus('Generiere PDFs…');
+
+      const cfg=collectConfig();
+      const excluded=new Set(config.excluded_names || []);
+
+      let selectedNames=allNames .filter(n=> !excluded.has(n.id)) .map(n=> n.name);
+
+      const formData=new FormData();
+
+      formData.append('settings', JSON.stringify({
+          ...cfg, selected_names: selectedNames
+        }));
+
+    const imageFile=document.getElementById('imageFile').files[0];
+
+    if (imageFile) {
+      formData.append('image', imageFile);
+    }
+
+    try {
+      const r=await fetch('/api/generate', {
+        method: 'POST',
+        body: formData,
+      });
+
+    if ( !r.ok) {
+      const data=await r.json();
+      showError(data.error || 'Fehler beim Generieren');
+      updateStatus('Fehler');
+      btn.disabled=false;
+      btn.textContent='PDF Generieren';
+      return;
+    }
+
+    const blob=await r.blob();
+
+    // Extract filename from header if present
+    let filename="tdw-creditroll.pdf";
+    const disposition=r.headers.get("content-disposition");
+
+    if (disposition && disposition.indexOf('attachment') !==-1) {
+      const filenameRegex=/filename[^;
+      =\n]*=((['"]).*?\2|[^;\n]*)/;
+ const matches=filenameRegex.exec(disposition);
+
+          if (matches !=null && matches[1]) {
+            filename=matches[1].replace(/['"]/g, ' ');
+
+            }
+          }
+
+          const downloadUrl=URL.createObjectURL(blob);
+
+          let html=` <div class="result-item" > <div class="filename" >$ {
+            escapeHtml(filename)
+          }
+
+          </div> <div class="details" >Erfolgreich generiert</div> <a class="btn-download" href="${downloadUrl}" download="${filename}" >⬇ Download</a> </div>`;
+          document.getElementById('resultsList').innerHTML=html;
+          document.getElementById('resultsOverlay').classList.add('visible');
+
+          // Save config
+          await saveConfig();
+          updateStatus('✅ PDF generiert');
+        }
+
+        catch (e) {
+          showError('Fehler: ' + e.message);
+          updateStatus('Fehler');
+        }
+
+        btn.disabled=false;
+        btn.textContent='PDF Generieren';
+      }
+
+      function closeResults() {
+        document.getElementById('resultsOverlay').classList.remove('visible');
+      }
+
+      // ── Helpers ────────────────────────────────────
+      function updateStatus(text) {
+        document.getElementById('headerStatus').textContent=text;
+      }
+
+      function showError(msg) {
+        const el=document.getElementById('errorMsg');
+        el.textContent=msg;
+        el.classList.toggle('visible', ! !msg);
+      }
+
+      function escapeHtml(str) {
+        const div=document.createElement('div');
+        div.textContent=str;
+        return div.innerHTML;
+      }
+
+      function escapeJs(str) {
+        return str.replace(/\\/g, '\\\\').replace(/'/g, "\\' ");
+
+        }
+
+        </script> </body> </html>
+  </style>
+ </head>
+</html>
