@@ -7,6 +7,7 @@ Dieser Workflow beschreibt, wie die fertiggestellte Web-Anwendung (als Flask App
 ## 1. Voraussetzungen prüfen
 - Eine Datei `requirements.txt` muss im Hauptverzeichnis existieren (sie enthält alle nötigen Python-Pakete wie `Flask`, `pandas`, `gunicorn`, etc.).
 - Eine Datei `Procfile` muss im Hauptverzeichnis existieren (Inhalt: `web: gunicorn app:app`).
+- Eine Datei `.python-version` sollte im Hauptverzeichnis liegen (Inhalt: `3.11.6`), um sicherzustellen, dass Render eine stabile Python-Version nutzt (standardmäßig wird sonst oft eine zu neue Test-Version verwendet, die Fehler verursacht).
 - Eine Datei `.gitignore` sollte sicherstellen, dass keine temporären Dateien oder Caches (z.B. `.DS_Store`, `__pycache__/`) hochgeladen werden.
 - Alle benötigten Schriften (Fonts) und das Standard-Bild (`tdw-gallpeters.png`) müssen im Ordnerstruktur vorhanden und relativ referenziert sein (keine absoluten `/Users/...` Pfade).
 
